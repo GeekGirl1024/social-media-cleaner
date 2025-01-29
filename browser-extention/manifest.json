@@ -1,0 +1,21 @@
+{
+    "name": "Social Media Cleaner",
+    "description": "Helps Clean Social Media",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "eraser.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://*.facebook.com/*allactivity*"],
+            "js": ["./facebook.js"]
+        }
+    ],
+    
+    "permissions": [
+        "activeTab",
+        "tabs"
+    ]
+}
