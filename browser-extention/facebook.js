@@ -8,6 +8,9 @@ function clickConfirm() {
     }
     if(item != null) {
         item.click();
+    } else {
+        // dismiss overlay
+        document.body.click();
     }
 }
 
