@@ -40,7 +40,9 @@ Till then you can read what I done at https://www.sophialee.dev/2023/09/22/clear
 ## Note
 - This will not delete Everything. There may be some things that you will have to delete manually because I have not accounted for all the features on the site.
 - These social media sites do not expect someone to sit there and press delete several hundreds or thousands of times and can cause issues try coming back in a few days and maybe it will resolve itself?
+- There is no guerentee that this works when you are trying to use it. Website UIs are changing all the time and if they move things around the Browser Extention may not be able to find the right buttons.
 
 ## Caution
 Using this will almost certainly violate many terms and conditions and can likely lead to your account being blocked, suspended or deleted.
+
 I am not responsible for whatever happens from using this program so use at your own risk.
