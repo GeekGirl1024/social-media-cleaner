@@ -14,7 +14,7 @@ This is to delete all of your timeline, comments, reactions and stuff from Faceb
     - Opera: <a href="opera://extensions/">opera://extensions/</a>
     - Chrome: <a href="chrome://extensions/">chrome://extensions/</a>
     - Edge: <a href="edge://extensions/">edge://extensions/</a>
-4. Click on "Developer Mode"
+4. Click on "Developer Mode" (After you are done using this extension, it is a good idea to disable this.)
 5. Click on Load Unpacked
 6. Select the "browser-extension" directory from the extracted folder.
 
