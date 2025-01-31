@@ -21,6 +21,7 @@ function deleteTimeline() {
         ActionOptions = document.querySelectorAll("[aria-label='Action options']")[lineIndex];
 
         if(PrevActionOptions == ActionOptions) {
+            PrevActionOptions = ActionOptions;
             lineIndex++;
             return;
         }
@@ -36,8 +37,12 @@ function deleteTimeline() {
                 menuOption = document.evaluate("//span[contains(text(), 'Remove')]",
                     document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             }
-            if(!menuOption == null) {
+            if(menuOption == null) {
                 menuOption = document.evaluate("//span[contains(text(), 'Delete')]",
+                    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            }
+            if(menuOption == null) {
+                menuOption = document.evaluate("//span[contains(text(), 'Unlike')]",
                     document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             }
 
@@ -56,7 +61,7 @@ function deleteTimeline() {
 var bodyElement = document.getElementsByTagName("body")[0];
 
 var buttonContainer = document.createElement("div");
-buttonContainer.style.position = "absolute";
+buttonContainer.style.position = "fixed";
 buttonContainer.style.margin = "10px";
 buttonContainer.style.zIndex = "10000";
 buttonContainer.style.top = "0";
@@ -65,6 +70,7 @@ buttonContainer.style.left = "100px"
 var startButton = document.createElement("button");
 startButton.innerText = "Start Deletion";
 startButton.onclick = deleteTimeline;
+startButton.style.marginRight = "10px";
 
 
 buttonContainer.appendChild(startButton);
@@ -72,8 +78,9 @@ buttonContainer.appendChild(startButton);
 var stopButton = document.createElement("button");
 stopButton.innerText = "Stop Deletion";
 stopButton.onclick = () => { clearInterval(intervalId) };
+stopButton.style.marginRight = "10px";
 
-buttonContainer.appendChild(document.createElement("br"));
+//buttonContainer.appendChild(document.createElement("br"));
 buttonContainer.appendChild(stopButton);
 
 bodyElement.appendChild(buttonContainer);
