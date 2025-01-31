@@ -10,6 +10,8 @@ function clickConfirm() {
         item.click();
     } else {
         // dismiss overlay
+
+
         document.body.click();
     }
 }
@@ -21,11 +23,13 @@ function deleteTimeline() {
     clearInterval(intervalId);
     lineIndex = 0;
     intervalId = setInterval(() => {
+
         ActionOptions = document.querySelectorAll("[aria-label='Action options']")[lineIndex];
 
         if(PrevActionOptions == ActionOptions) {
             PrevActionOptions = ActionOptions;
             lineIndex++;
+            setStatus("Undeleted element detected. \nSkipping First " + (lineIndex) + " Lines");
             return;
         }
 
@@ -54,6 +58,7 @@ function deleteTimeline() {
                 setTimeout(clickConfirm, .2*1000);
             } else {
                 lineIndex++;
+                setStatus("No removal menu option detected. Skipping First " + (lineIndex) + "Lines");
             }
 
         }, .2*1000);
@@ -61,29 +66,76 @@ function deleteTimeline() {
     }, 2*1000);
 }
 
-var bodyElement = document.getElementsByTagName("body")[0];
+function createUI() {
+    var buttonContainer = document.createElement("div");
+    buttonContainer.style.position = "fixed";
+    buttonContainer.style.margin = "10px";
+    buttonContainer.style.zIndex = "10000";
+    buttonContainer.style.top = "0";
+    buttonContainer.style.height = "30px";
+    buttonContainer.style.width = "300px"
+    buttonContainer.style.left = "100px";
+    buttonContainer.style.backgroundColor = "powderblue";
+    buttonContainer.style.border = "darkgrey solid 1px";
+    buttonContainer.style.overflow = "hidden";
 
-var buttonContainer = document.createElement("div");
-buttonContainer.style.position = "fixed";
-buttonContainer.style.margin = "10px";
-buttonContainer.style.zIndex = "10000";
-buttonContainer.style.top = "0";
-buttonContainer.style.left = "100px"
+    var expandCollapseButton = document.createElement("button");
+    var expanded = false;
+    expandCollapseButton.innerText = "🔽";
+    expandCollapseButton.onclick = () => {
+        if(expanded) {
+            expanded = false;
+            expandCollapseButton.innerText = "🔼";
+            buttonContainer.style.height = "30px";
+        } else {
+            expanded = true;
+            expandCollapseButton.innerText = "🔽";
+            buttonContainer.style.height = "300px";
+        }
+    };
+    expandCollapseButton.style.margin = "5px";
 
-var startButton = document.createElement("button");
-startButton.innerText = "Start Deletion";
-startButton.onclick = deleteTimeline;
-startButton.style.marginRight = "10px";
+    buttonContainer.appendChild(expandCollapseButton);
+
+    var startButton = document.createElement("button");
+    startButton.innerText = "Start Deletion";
+    startButton.onclick = deleteTimeline;
+    startButton.style.margin = "5px";
 
 
-buttonContainer.appendChild(startButton);
+    buttonContainer.appendChild(startButton);
 
-var stopButton = document.createElement("button");
-stopButton.innerText = "Stop Deletion";
-stopButton.onclick = () => { clearInterval(intervalId) };
-stopButton.style.marginRight = "10px";
+    var stopButton = document.createElement("button");
+    stopButton.innerText = "Stop Deletion";
+    stopButton.onclick = () => { setStatus("stop deletion"); clearInterval(intervalId) };
+    stopButton.style.margin = "5px";
 
-//buttonContainer.appendChild(document.createElement("br"));
-buttonContainer.appendChild(stopButton);
+    buttonContainer.appendChild(stopButton);
 
-bodyElement.appendChild(buttonContainer);
+    buttonContainer.appendChild(document.createElement("br"));
+
+
+    var textarea = document.createElement("textarea");
+    textarea.id = "cleanerstatus"
+    textarea.style.margin = "5px";
+    textarea.style.backgroundColor = "white";
+    textarea.style.width = "250px";
+    textarea.style.height = "250px";
+    buttonContainer.appendChild(textarea);
+    document.body.appendChild(buttonContainer);
+
+    setStatus("UI ready");
+}
+
+
+function clearStatus() {
+    var textarea = document.getElementById("cleanerstatus");
+    textarea.value = "";
+}
+
+function setStatus(status) {
+    var textarea = document.getElementById("cleanerstatus");
+    textarea.value = status + "\n" + textarea.value;
+}
+
+createUI()
