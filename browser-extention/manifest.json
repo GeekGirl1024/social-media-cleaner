@@ -11,6 +11,10 @@
         {
             "matches": ["https://*.facebook.com/*allactivity*"],
             "js": ["./facebook.js"]
+        },
+        {
+            "matches": ["https://*.x.com/*"],
+            "js": ["./twitter.js"]
         }
     ],
     

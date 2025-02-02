@@ -1,69 +1,87 @@
+var lineIndex = 0;
+var intervalId = 0;
+
+var skipInput;
+
+function scheduleDeleteTimeline() {
+    clearInterval(intervalId);
+    
+    setSkip(0);
+    
+    intervalId = setInterval(deleteTimeline, 1*1000);
+
+}
+
+function deleteTimeline() {
+    var ActionOptions = document.querySelectorAll("[aria-label='Action options']")[lineIndex];
+
+    if(ActionOptions) {
+        ActionOptions.click();
+
+        setTimeout(chooseMenuOption, .2*1000);
+    }
+}
+
+function chooseMenuOption() {
+    let menuOptionTexts = ["trash", "Remove", "Delete", "Unlike"];
+
+    var menuOption = null;
+
+    for(var i = 0; i < menuOptionTexts.length; i++) {
+        menuOption = document.evaluate("//span[contains(text(), '" + menuOptionTexts[i] + "')]",
+            document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+        if(menuOption != null) {
+            break;
+        }
+    }
+
+    if(menuOption != null) {
+        menuOption.click();
+        setTimeout(clickConfirm, .2*1000);
+    }
+}
+
 function clickConfirm() {
-    let item = document.querySelector("[aria-hidden='false'] [aria-label='Delete']");
-    if (item == null) {
-        item = document.querySelector("[aria-hidden='false'] [aria-label='Move to Trash']")
+    let clickConfirmOptions = ["Delete", "Move to Trash", "Remove"];
+
+    let item = null
+    
+    for(var i = 0; i < clickConfirmOptions.length; i++) {
+        item = document.querySelector("[aria-hidden='false'] [aria-label='" + clickConfirmOptions[i] + "']");
+        if(item != null) {
+            break;
+        }
     }
-    if (item == null) {
-        item = document.querySelector("[aria-hidden='false'] [aria-label='Remove']")
-    }
+
     if(item != null) {
         item.click();
     } else {
-        // dismiss overlay
-
-
         document.body.click();
     }
 }
 
-var lineIndex = 0;
-var intervalId = 0;
-var PrevActionOptions;
-function deleteTimeline() {
-    clearInterval(intervalId);
-    lineIndex = 0;
-    intervalId = setInterval(() => {
+function clearStatus() {
+    var textarea = document.getElementById("cleanerstatus");
+    textarea.value = "";
+}
 
-        ActionOptions = document.querySelectorAll("[aria-label='Action options']")[lineIndex];
+function setStatus(status) {
+    var textarea = document.getElementById("cleanerstatus");
+    textarea.value = status + "\n" + textarea.value;
+}
 
-        if(PrevActionOptions == ActionOptions) {
-            PrevActionOptions = ActionOptions;
-            lineIndex++;
-            setStatus("Undeleted element detected. \nSkipping First " + (lineIndex) + " Lines");
-            return;
-        }
+function setSkip(newSkip) {
+    lineIndex = newSkip;
+    let skipNumber = parseInt(newSkip);
+    if(isNaN(skipNumber)) {
+        skipNumber = 0;
+    }
 
-        PrevActionOptions = ActionOptions;
+    lineIndex = skipNumber;
+    skipInput.value = lineIndex;
 
-        ActionOptions.click();
-
-        setTimeout(() => {
-            menuOption = document.evaluate("//span[contains(text(), 'trash')]",
-                document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            if(menuOption == null) {
-                menuOption = document.evaluate("//span[contains(text(), 'Remove')]",
-                    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            }
-            if(menuOption == null) {
-                menuOption = document.evaluate("//span[contains(text(), 'Delete')]",
-                    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            }
-            if(menuOption == null) {
-                menuOption = document.evaluate("//span[contains(text(), 'Unlike')]",
-                    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            }
-
-            if(menuOption != null) {
-                menuOption.click();
-                setTimeout(clickConfirm, .2*1000);
-            } else {
-                lineIndex++;
-                setStatus("No removal menu option detected. Skipping First " + (lineIndex) + "Lines");
-            }
-
-        }, .2*1000);
-    
-    }, 2*1000);
+    setStatus("Updating Skip Value to " + lineIndex);
 }
 
 function createUI() {
@@ -73,7 +91,7 @@ function createUI() {
     buttonContainer.style.zIndex = "10000";
     buttonContainer.style.top = "0";
     buttonContainer.style.height = "30px";
-    buttonContainer.style.width = "300px"
+    buttonContainer.style.width = "450px"
     buttonContainer.style.left = "100px";
     buttonContainer.style.backgroundColor = "powderblue";
     buttonContainer.style.border = "darkgrey solid 1px";
@@ -99,7 +117,7 @@ function createUI() {
 
     var startButton = document.createElement("button");
     startButton.innerText = "Start Deletion";
-    startButton.onclick = deleteTimeline;
+    startButton.onclick = scheduleDeleteTimeline;
     startButton.style.margin = "5px";
 
 
@@ -112,6 +130,28 @@ function createUI() {
 
     buttonContainer.appendChild(stopButton);
 
+
+    skipInput = document.createElement("input");
+    skipInput.style = "width: 20px; margin: 5px";
+    
+    skipInput.value = lineIndex;
+
+    buttonContainer.appendChild(skipInput);
+
+    var skipButton = document.createElement("button");
+    skipButton.innerText = "Update Skip";
+    skipButton.onclick = () => { setSkip(skipInput.value) };
+    skipButton.style.margin = "5px";
+
+    buttonContainer.appendChild(skipButton);
+
+    var skipPlusOneButton = document.createElement("button");
+    skipPlusOneButton.innerText = "Skip + 1";
+    skipPlusOneButton.onclick = () => { setSkip((lineIndex + 1)) };
+    skipPlusOneButton.style.margin = "5px";
+
+    buttonContainer.appendChild(skipPlusOneButton);
+
     buttonContainer.appendChild(document.createElement("br"));
 
 
@@ -119,23 +159,13 @@ function createUI() {
     textarea.id = "cleanerstatus"
     textarea.style.margin = "5px";
     textarea.style.backgroundColor = "white";
-    textarea.style.width = "250px";
+    textarea.style.color = "black";
+    textarea.style.width = "calc(100% - 15px)";
     textarea.style.height = "250px";
     buttonContainer.appendChild(textarea);
     document.body.appendChild(buttonContainer);
 
     setStatus("UI ready");
-}
-
-
-function clearStatus() {
-    var textarea = document.getElementById("cleanerstatus");
-    textarea.value = "";
-}
-
-function setStatus(status) {
-    var textarea = document.getElementById("cleanerstatus");
-    textarea.value = status + "\n" + textarea.value;
 }
 
 createUI()
