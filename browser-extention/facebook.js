@@ -103,11 +103,11 @@ function createUI() {
     expandCollapseButton.onclick = () => {
         if(expanded) {
             expanded = false;
-            expandCollapseButton.innerText = "🔼";
+            expandCollapseButton.innerText = "🔽";
             buttonContainer.style.height = "30px";
         } else {
             expanded = true;
-            expandCollapseButton.innerText = "🔽";
+            expandCollapseButton.innerText = "🔼";
             buttonContainer.style.height = "300px";
         }
     };
