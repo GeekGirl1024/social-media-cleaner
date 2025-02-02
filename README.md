@@ -33,9 +33,21 @@ you have to request your data be prepared for download first which can take seve
 6. If you click the down arrow button, the panel will expand and show the status logs.
 
 ## How to use for Twitter
-Coming soon hopefully.
+### Backup
+Before running this script if you want to save all your information go to https://x.com/settings/download_your_data and download your data.
+you have to request your data be prepared for download first which can take several days before it is ready to download.
 
-Till then you can read what I done at https://www.sophialee.dev/2023/09/22/clearing-twitter-data/
+
+### Deleting
+1. Go to your profile page
+    - https://www.x.com/{your-username-here}
+2. Once Page loads, there will be a panel on the upper left corner that has the buttons "Start Deletion" and "Stop Deletion"
+3. Delete/Unlike
+    - While in the Posts tab, click "Start Deletion"
+    - While in the Likes tab, click "Start Unlike"
+    - While in the Replies tab, "Start Deletion" kinda works but is buggy
+4. If at any point you want to stop click "Stop Deletion"
+5. If you click the down arrow button, the panel will expand and show the status logs.
 
 ## Note
 - This will not delete Everything. There may be some things that you will have to delete manually because I have not accounted for all the features on the site.
